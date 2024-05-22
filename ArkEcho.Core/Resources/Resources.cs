@@ -9,7 +9,9 @@ namespace ArkEcho
     public class Resources
     {
         public const int ARKECHOPORT = 7236;
-        public const string SERVERADDRESSSETTING = "ServerAddress";
+
+        public const string SERVERADDRESSSETTING = "SERVER_ADDRESS";
+        public const string SESSIONTOKENSETTING = "SESSION_TOKEN";
 
         public const string PLAYLISTFOLDER = "Wiedergabelisten";
 

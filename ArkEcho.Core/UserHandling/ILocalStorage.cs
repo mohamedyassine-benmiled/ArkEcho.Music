@@ -1,20 +1,25 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace ArkEcho.Core
 {
     public interface ILocalStorage
     {
-        Task<T> GetItemAsync<T>(string key);
+        Task<string> GetStringAsync(string key);
+        Task<Guid> GetGuidAsync(string key);
 
         Task RemoveItemAsync(string key);
 
-        Task SetItemAsync<T>(string key, T data);
+        Task SetStringAsync(string key, string data);
+        Task SetGuidAsync(string key, Guid data);
     }
 
     public abstract class LocalStorageBase : ILocalStorage
     {
-        public abstract Task<T> GetItemAsync<T>(string key);
+        public abstract Task<Guid> GetGuidAsync(string key);
+        public abstract Task<string> GetStringAsync(string key);
         public abstract Task RemoveItemAsync(string key);
-        public abstract Task SetItemAsync<T>(string key, T data);
+        public abstract Task SetGuidAsync(string key, Guid data);
+        public abstract Task SetStringAsync(string key, string data);
     }
 }

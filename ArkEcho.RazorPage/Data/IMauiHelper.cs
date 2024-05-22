@@ -16,7 +16,9 @@ namespace ArkEcho.RazorPage.Data
         bool DarkMode { set; }
         void SetDragArea(bool fullTitlebar);
 
-        string GetServerAddressSetting();
-        void SetServerAddressSetting(string setting);
+        void SaveStringToSettings(string key, string value);
+        bool CheckSettingsForKey(string key);
+        void RemoveKeyFromSettings(string key);
+        string GetStringFromSettings(string key);
     }
 }

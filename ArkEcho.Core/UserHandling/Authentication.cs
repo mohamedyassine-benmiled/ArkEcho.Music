@@ -7,7 +7,6 @@ namespace ArkEcho.Core
     {
         private Rest rest = null;
         private ILocalStorage localStorage = null;
-        private const string SESSIONTOKEN = "AE_ACCESS_TOKEN";
 
         public User AuthenticatedUser { get; private set; }
 
@@ -21,24 +20,24 @@ namespace ArkEcho.Core
         {
             try
             {
-                Guid accessToken = await localStorage.GetItemAsync<Guid>(SESSIONTOKEN);
+                Guid accessToken = await localStorage.GetGuidAsync(Resources.SESSIONTOKENSETTING);
                 if (accessToken == Guid.Empty)
                     return false;
 
                 if (!await rest.CheckSession(accessToken))
                 {
-                    await localStorage.RemoveItemAsync(SESSIONTOKEN);
+                    await localStorage.RemoveItemAsync(Resources.SESSIONTOKENSETTING);
                     return false;
                 }
 
                 AuthenticatedUser = await rest.GetUser(accessToken);
                 if (AuthenticatedUser == null)
                 {
-                    await localStorage.RemoveItemAsync(SESSIONTOKEN);
+                    await localStorage.RemoveItemAsync(Resources.SESSIONTOKENSETTING);
                     return false;
                 }
 
-                await localStorage.SetItemAsync(SESSIONTOKEN, AuthenticatedUser.SessionToken);
+                await localStorage.SetGuidAsync(Resources.SESSIONTOKENSETTING, AuthenticatedUser.SessionToken);
                 rest.ApiToken = await rest.GetApiToken(AuthenticatedUser.SessionToken);
                 return true;
             }
@@ -59,7 +58,7 @@ namespace ArkEcho.Core
             if (AuthenticatedUser == null)
                 return false;
 
-            await localStorage.SetItemAsync(SESSIONTOKEN, AuthenticatedUser.SessionToken);
+            await localStorage.SetGuidAsync(Resources.SESSIONTOKENSETTING, AuthenticatedUser.SessionToken);
             rest.ApiToken = await rest.GetApiToken(AuthenticatedUser.SessionToken);
             return true;
         }
@@ -68,8 +67,8 @@ namespace ArkEcho.Core
         {
             try
             {
-                Guid accessToken = await localStorage.GetItemAsync<Guid>(SESSIONTOKEN);
-                await localStorage.RemoveItemAsync(SESSIONTOKEN);
+                Guid accessToken = await localStorage.GetGuidAsync(Resources.SESSIONTOKENSETTING);
+                await localStorage.RemoveItemAsync(Resources.SESSIONTOKENSETTING);
                 await rest.LogoutSession(accessToken);
                 AuthenticatedUser = null;
                 return true;

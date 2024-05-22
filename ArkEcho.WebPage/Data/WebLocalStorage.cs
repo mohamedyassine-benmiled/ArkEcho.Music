@@ -1,6 +1,5 @@
 ﻿using ArkEcho.Core;
 using Blazored.LocalStorage;
-using System.Threading.Tasks;
 
 namespace ArkEcho.WebPage.Data
 {
@@ -13,9 +12,14 @@ namespace ArkEcho.WebPage.Data
             this.blazorLocalStorage = blazorLocalStorage;
         }
 
-        public override async Task<T> GetItemAsync<T>(string key)
+        public override async Task<Guid> GetGuidAsync(string key)
         {
-            return await blazorLocalStorage.GetItemAsync<T>(key);
+            return await blazorLocalStorage.GetItemAsync<Guid>(key);
+        }
+
+        public override async Task<string> GetStringAsync(string key)
+        {
+            return await blazorLocalStorage.GetItemAsync<string>(key);
         }
 
         public override async Task RemoveItemAsync(string key)
@@ -23,7 +27,12 @@ namespace ArkEcho.WebPage.Data
             await blazorLocalStorage.RemoveItemAsync(key);
         }
 
-        public override async Task SetItemAsync<T>(string key, T data)
+        public override async Task SetGuidAsync(string key, Guid data)
+        {
+            await blazorLocalStorage.SetItemAsync(key, data);
+        }
+
+        public override async Task SetStringAsync(string key, string data)
         {
             await blazorLocalStorage.SetItemAsync(key, data);
         }

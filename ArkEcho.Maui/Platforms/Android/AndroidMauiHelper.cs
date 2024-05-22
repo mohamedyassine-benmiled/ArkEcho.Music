@@ -36,16 +36,26 @@ namespace ArkEcho.Maui.AndroidMaui
         public bool DarkMode { get; set; }
         public void SetDragArea(bool fullTitlebar) { }
 
-        public string GetServerAddressSetting()
-        {
-            return Preferences.Get(Resources.SERVERADDRESSSETTING, $"http://localhost:{Resources.ARKECHOPORT}");
-        }
-
-        public void SetServerAddressSetting(string setting)
-        {
-            Preferences.Set(Resources.SERVERADDRESSSETTING, setting);
-        }
-
         public string ApplicationTitle { get; set; }
+
+        public void SaveStringToSettings(string key, string value)
+        {
+            Preferences.Set(key, value);
+        }
+
+        public bool CheckSettingsForKey(string key)
+        {
+            return Preferences.ContainsKey(key);
+        }
+
+        public void RemoveKeyFromSettings(string key)
+        {
+            Preferences.Remove(key);
+        }
+
+        public string GetStringFromSettings(string key)
+        {
+            return Preferences.Get(key, string.Empty);
+        }
     }
 }

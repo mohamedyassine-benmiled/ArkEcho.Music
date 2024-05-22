@@ -152,14 +152,24 @@ namespace ArkEcho.Maui.WinUI
             appWindow.TitleBar.SetDragRectangles(new RectInt32[] { rect });
         }
 
-        public string GetServerAddressSetting()
+        public void SaveStringToSettings(string key, string value)
         {
-            return Preferences.Get(Resources.SERVERADDRESSSETTING, $"http://localhost:{Resources.ARKECHOPORT}");
+            Preferences.Set(key, value);
         }
 
-        public void SetServerAddressSetting(string setting)
+        public bool CheckSettingsForKey(string key)
         {
-            Preferences.Set(Resources.SERVERADDRESSSETTING, setting);
+            return Preferences.ContainsKey(key);
+        }
+
+        public void RemoveKeyFromSettings(string key)
+        {
+            Preferences.Remove(key);
+        }
+
+        public string GetStringFromSettings(string key)
+        {
+            return Preferences.Get(key, string.Empty);
         }
     }
 }

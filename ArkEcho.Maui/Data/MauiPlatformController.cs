@@ -10,6 +10,7 @@ namespace ArkEcho.Maui.Data
         {
             this.mauiHelper = mauiHelper;
         }
+
         public override async Task ProcessUserLogin()
         {
             mauiHelper.SetDragArea(false);

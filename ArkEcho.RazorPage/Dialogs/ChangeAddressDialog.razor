@@ -1,5 +1,5 @@
 
-@inject IMauiHelper mauiHelper
+@inject ILocalStorage localStorage
 @inject AppEnvironment environment
 @inject Rest rest
 
@@ -24,9 +24,11 @@
 
     private string serverAddress = string.Empty;
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        serverAddress = mauiHelper.GetServerAddressSetting();
+        serverAddress = await localStorage.GetStringAsync(Resources.SERVERADDRESSSETTING);
+        if (string.IsNullOrEmpty(serverAddress))
+            serverAddress = $"http://localhost:{Resources.ARKECHOPORT}";
     }
 
     private void Cancel()
@@ -36,8 +38,8 @@
 
     private void Save()
     {
-        mauiHelper.SetServerAddressSetting(serverAddress);
         environment.ServerAddress = serverAddress;
+        localStorage.SetStringAsync(Resources.SERVERADDRESSSETTING, serverAddress);
         rest.Connect();
         MudDialog.Close();
     }

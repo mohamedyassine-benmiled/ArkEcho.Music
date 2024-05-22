@@ -1,27 +1,41 @@
 ﻿using ArkEcho.Core;
+using ArkEcho.RazorPage.Data;
 
 namespace ArkEcho.Maui
 {
     public class MauiLocalStorage : LocalStorageBase
     {
-        private Dictionary<string, object> storage = new Dictionary<string, object>();
+        private IMauiHelper helper;
 
-        public override async Task<T> GetItemAsync<T>(string key)
+        public MauiLocalStorage(IMauiHelper helper)
         {
-            if (storage.TryGetValue(key, out var value))
-                return (T)value;
-            else
-                return default(T);
+            this.helper = helper;
+        }
+
+        public override async Task<Guid> GetGuidAsync(string key)
+        {
+            string value = await GetStringAsync(key);
+            return Guid.Parse(value);
+        }
+
+        public override async Task<string> GetStringAsync(string key)
+        {
+            return await Task.FromResult(helper.GetStringFromSettings(key));
         }
 
         public override async Task RemoveItemAsync(string key)
         {
-            storage.Remove(key);
+            helper.RemoveKeyFromSettings(key);
         }
 
-        public override async Task SetItemAsync<T>(string key, T data)
+        public override async Task SetGuidAsync(string key, Guid data)
         {
-            storage.Add(key, data);
+            await SetStringAsync(key, data.ToString());
+        }
+
+        public override async Task SetStringAsync(string key, string data)
+        {
+            helper.SaveStringToSettings(key, data);
         }
     }
 }
