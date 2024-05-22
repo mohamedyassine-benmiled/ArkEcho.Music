@@ -38,5 +38,10 @@ namespace ArkEcho.RazorPage.Data
         {
             await CheckConnectionAsync();
         }
+
+        public void ChangeTimer(bool enable)
+        {
+            timer.Enabled = enable;
+        }
     }
 }

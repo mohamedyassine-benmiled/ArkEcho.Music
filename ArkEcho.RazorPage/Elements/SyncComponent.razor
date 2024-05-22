@@ -7,13 +7,14 @@
 @inject Authentication authentication
 @inject Rest rest
 @inject Player player
+@inject ConnectionStatus connection
 
-<MudContainer MaxWidth="MaxWidth.Small">
+<MudElement Class="overflow-auto px-4" Style=@elementWidth>
     <MudPaper Class="my-4 pa-2" Outlined="true">
         <MudStack>
             <MudStack Class="my-1" Row="true">
-                <MudField Label="Music Library Path" Class="overflow-x-auto" Variant="Variant.Filled">@sync.MusicFolder</MudField>
-                    @if (showChangeFolderButton())
+                <MudField Label="Music Library Path" Class="overflow-auto" Variant="Variant.Filled">@sync.MusicFolder</MudField>
+                @if(environment.Platform == Resources.Platform.Windows)
                 {
                     <MudIconButton Class="mt-3" Icon="@Icons.Material.Rounded.FolderOpen" Disabled="@(status == Resources.Status.Busy)"
                                    Color="Color.Secondary" Size="Size.Medium" OnClick="changeMusicFolder">Sync Music Library</MudIconButton>
@@ -35,7 +36,7 @@
 
         </MudStack>
     </MudPaper>
-</MudContainer>
+</MudElement>
 
 @code{
 
@@ -43,18 +44,14 @@
 
     private string syncMessage = string.Empty;
     private int syncProgress = 0;
-
+    private string elementWidth = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         sync.SyncProgress += OnProgressEvent;
+        elementWidth = environment.Platform == Resources.Platform.Windows ? "width: 50vw;" : "width: 100vw;";
 
         await base.OnInitializedAsync();
-    }
-
-    private bool showChangeFolderButton()
-    {
-        return environment.Platform == Resources.Platform.Windows;
     }
 
     private async void changeMusicFolder()
@@ -87,16 +84,22 @@
 
         status = Resources.Status.Busy;
 
+        connection.ChangeTimer(false); // Disable Connection Timer
+
         await InvokeAsync(StateHasChanged);
 
         if (!await Model.LoadLibraryFromServer())
+        {
+            connection.ChangeTimer(true);
             return;
+        }
 
         await sync.StartSyncMusicLibrary(Model.Library);
 
         status = Resources.Status.Idle;
 
         await InvokeAsync(StateHasChanged);
+        connection.ChangeTimer(true);
     }
 
     private async void OnProgressEvent(object sender, LibrarySync.ProgressEventArgs args)
