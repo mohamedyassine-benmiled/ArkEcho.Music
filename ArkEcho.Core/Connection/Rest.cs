@@ -61,6 +61,8 @@ namespace ArkEcho.Core
         {
             try
             {
+                //ACCEPT ALL SSL CERTIFICATES
+                
                 if (environment.UserHttpClientHandler)
                 {
                     // TODO: Disable on Release Build?

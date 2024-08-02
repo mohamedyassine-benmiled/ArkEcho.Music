@@ -19,6 +19,10 @@ namespace ArkEcho.Server.Database
 
             connection = new SQLiteConnection($"DataSource={dbFilePath};Version=3;");
 
+            //Get current app path
+            string appPath = AppDomain.CurrentDomain.BaseDirectory;
+            //Add dbfilepath to apppath
+            dbFilePath = Path.Combine(appPath, dbFilePath);
             bool dbExists = File.Exists(dbFilePath);
             if (!dbExists)
                 SQLiteConnection.CreateFile(dbFilePath);
